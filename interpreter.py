@@ -12,7 +12,7 @@ def parse(program):
 	global array
 	global dataPtr
 	global prgPtr
-	while(program):
+	while(prgPtr <= len(program)):
 		def goto():
 			global array
 			global dataPtr
@@ -24,17 +24,16 @@ def parse(program):
 				if prgPtr < 0:
 					print("Fatal Error: Instruction Pointer less than zero")
 					quit()
-				print("Eval")
+				print("goto")
 				eval(program[prgPtr], program)
-			except(IndexError):
-				print("Extending")
+			except IndexError as e:
+				print(e)
 				array.extend([0] * 1000)
 				goto()
-			except(ValueError):
+			except ValueError as e:
+				print(e)
 				pass
 		goto()
-		if prgPtr == len(program):
-			break
 		prgPtr += 1
 
 def increment(x):
@@ -67,6 +66,7 @@ def eval(x, program):
 	global dataPtr
 	global prgPtr
 	global previousWhile
+	print("Eval")
 	command = {
 		">" : increment(dataPtr),
 		"<" : decrement(dataPtr),
@@ -76,7 +76,9 @@ def eval(x, program):
 		"," : sys.stdin.read(1),
 		"[" : beginLoop(), 
 		"]" : closeLoop(), 
-	}.get(x, ValueError) 
+	}.get(x, ValueError)
+
+	print(command) 
 
 	return command()
 
