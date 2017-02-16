@@ -24,7 +24,6 @@ def parse(program):
 				if prgPtr < 0:
 					print("Fatal Error: Instruction Pointer less than zero")
 					quit()
-				print("goto")
 				eval(program[prgPtr], program)
 			except IndexError as e:
 				print(e)
@@ -37,12 +36,14 @@ def parse(program):
 		prgPtr += 1
 
 def increment(x):
-	return x + 1
+	x = x + 1
+	return x 
 
 def decrement(x):
-	return x - 1
+	x = x - 1
+	return x
 
-def beginLoop():
+def beginLoop(program):
 	global array
 	global dataPtr
 	global prgPtr
@@ -53,7 +54,7 @@ def beginLoop():
 				previousWhile = prgPtr
 				prgPtr = x + 1
 
-def closeLoop():
+def closeLoop(program):
 	global array
 	global dataPtr
 	global prgPtr
@@ -66,21 +67,20 @@ def eval(x, program):
 	global dataPtr
 	global prgPtr
 	global previousWhile
-	print("Eval")
 	command = {
-		">" : increment(dataPtr),
-		"<" : decrement(dataPtr),
-		"+" : increment(array[dataPtr]),
-		"-" : decrement(array[dataPtr]),  
-		"." : print(array[dataPtr]),
-		"," : sys.stdin.read(1),
-		"[" : beginLoop(), 
-		"]" : closeLoop(), 
+		">" : lambda _: increment(dataPtr),
+		"<" : lambda _: decrement(dataPtr),
+		"+" : lambda _: increment(array[dataPtr]),
+		"-" : lambda _: decrement(array[dataPtr]),  
+		"." : lambda _: print(array[dataPtr]),
+		"," : lambda _: sys.stdin.read(1),
+		"[" : lambda _: beginLoop(program), 
+		"]" : lambda _: closeLoop(program), 
 	}.get(x, ValueError)
 
-	print(command) 
+	print(command(0))
 
-	return command()
+	return command(0)
 
 def main():
 	"""Interpreter debugging"""
