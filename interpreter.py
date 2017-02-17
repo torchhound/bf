@@ -1,6 +1,6 @@
 import sys
 
-array = [0] * 1000
+array = {}
 
 previousWhile = 0
 
@@ -9,10 +9,11 @@ dataPtr = 0
 prgPtr = 0
 
 def parse(program):
+	'''Parses a string of brainfuck commands'''
 	global array
 	global dataPtr
 	global prgPtr
-	while(prgPtr <= len(program)):
+	while(prgPtr < len(program)):
 		def goto():
 			global array
 			global dataPtr
@@ -25,25 +26,27 @@ def parse(program):
 					print("Fatal Error: Instruction Pointer less than zero")
 					quit()
 				eval(program[prgPtr], program)
-			except IndexError as e:
-				print(e)
-				array.extend([0] * 1000)
+			except KeyError as e:
+				array[prgPtr] = 0
 				goto()
 			except ValueError as e:
 				print(e)
-				pass
+				quit()
 		goto()
 		prgPtr += 1
 
 def increment(x):
+	'''Increments an input by one'''
 	x = x + 1
 	return x 
 
 def decrement(x):
+	'''Decrements an input by one'''
 	x = x - 1
 	return x
 
 def beginLoop(program):
+	'''Begins a while loop'''
 	global array
 	global dataPtr
 	global prgPtr
@@ -55,6 +58,7 @@ def beginLoop(program):
 				prgPtr = x + 1
 
 def closeLoop(program):
+	'''Closes a while loop'''
 	global array
 	global dataPtr
 	global prgPtr
@@ -63,6 +67,7 @@ def closeLoop(program):
 		prgPtr = previousWhile;
 
 def eval(x, program):
+	'''Evaluates a single brainfuck command'''
 	global array
 	global dataPtr
 	global prgPtr
@@ -72,7 +77,7 @@ def eval(x, program):
 		"<" : lambda _: decrement(dataPtr),
 		"+" : lambda _: increment(array[dataPtr]),
 		"-" : lambda _: decrement(array[dataPtr]),  
-		"." : lambda _: print(array[dataPtr]),
+		"." : lambda _: print("print ", array[dataPtr]),
 		"," : lambda _: sys.stdin.read(1),
 		"[" : lambda _: beginLoop(program), 
 		"]" : lambda _: closeLoop(program), 
