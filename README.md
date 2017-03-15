@@ -1,3 +1,3 @@
-#Yet another brainfuck interpreter
+# Yet another brainfuck interpreter
 
 Written in Python3
